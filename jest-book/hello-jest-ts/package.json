@@ -1,6 +1,9 @@
 {
   "name": "hello-jest-ts",
   "type": "module",
+  "scripts": {
+    "test": "jest"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.1",
     "@types/node": "^20.1.1",
