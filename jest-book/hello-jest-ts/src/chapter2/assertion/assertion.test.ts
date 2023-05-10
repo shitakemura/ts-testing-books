@@ -168,3 +168,167 @@ test('compare number', () => {
   expect(0.1 + 0.2).toBeLessThan(0.4)
   expect(0.1 + 0.2).toBeLessThanOrEqual(0.4)
 })
+
+// 文字列の部分一致（正規表現）
+const log1 =
+  '10.0.0.3 - - [30/Jan/2023:12:20:12 +0000] "GET / HTTP/1.1" 200 615 "-" "curl/7.74.0" "-"'
+const log2 =
+  '10.0.0.11 - - [30/Jan/2023:12:20:40 +0000] "GET / HTTP/1.1" 200 615 "-" "curl/7.74.0" "-"'
+const log3 =
+  '10.0.0.99 - - [30/Jan/2023:12:20:40 +0000] "GET / HTTP/1.1" 200 615 "-" "curl/7.74.0" "-"'
+
+test('contains 10.0.0.3 IP address', () => {
+  expect(log1).toEqual(
+    expect.stringContaining('10.0.0.3')
+  )
+})
+
+test('contain IP address between 10.0.0.0 and 10.0.0.99', () => {
+  const expected = /^10.0.0.([1-9]?[0-9]) /
+
+  // expect.stringMatching
+  expect(log1).toEqual(expect.stringMatching(expected))
+  expect(log2).toEqual(expect.stringMatching(expected))
+  expect(log3).toEqual(expect.stringMatching(expected))
+
+  // toMatch
+  expect(log1).toMatch(expected)
+  expect(log2).toMatch(expected)
+  expect(log3).toMatch(expected)
+
+  // toBe
+  const regex = new RegExp(expected)
+  expect(regex.test(log1)).toBe(true)
+  expect(regex.test(log2)).toBe(true)
+  expect(regex.test(log3)).toBe(true)
+})
+
+// 配列の部分一致
+const fruitList = ['Apple', 'Lemon', 'Orange']
+
+test('contains Apple in fruitList', () => {
+  expect(fruitList).toContain('Apple')
+})
+
+test('contains Apple and Orange in fruitList', () => {
+  expect(fruitList).toEqual(
+    expect.arrayContaining(['Apple', 'Orange'])
+  )
+})
+
+test('fruitList is Apple and Lemon and Orange', () => {
+  expect(fruitList).toEqual(['Apple', 'Lemon', 'Orange'])
+})
+
+const itemList = [
+  { name: 'Apple', price: 100 },
+  { name: 'Lemon', price: 150 },
+  { name: 'Orange', price: 120 },
+]
+
+test('contains Apple in itemList', () => {
+  expect(itemList).toContainEqual({
+    name: 'Apple',
+    price: 100,
+  })
+})
+
+test('contains Apple and Orange in itemList', () => {
+  expect(itemList).toEqual(
+    expect.arrayContaining([
+      { name: 'Apple', price: 100 },
+      { name: 'Orange', price: 120 },
+    ])
+  )
+})
+
+// オブジェクトの部分一致
+const ciBuild = {
+  number: 1,
+  duration: 12000,
+  state: 'success',
+  triggerParameters: {
+    is_scheduled: true,
+  },
+  type: 'scheduled_pipeline',
+  actor: {
+    login: 'shitakemura',
+  },
+}
+
+test('build state should be success', () => {
+  expect(ciBuild).toHaveProperty('state', 'success')
+})
+
+test('actor should be shitakemura', () => {
+  expect(ciBuild).toHaveProperty(
+    'actor.login',
+    'shitakemura'
+  )
+})
+
+test('triggered by the scheduled pipeline', () => {
+  expect(ciBuild).toEqual(
+    expect.objectContaining({
+      triggerParameters: expect.objectContaining({
+        is_scheduled: true,
+      }),
+      type: 'scheduled_pipeline',
+    })
+  )
+})
+
+// Errorの評価
+class User {
+  name: string
+  password: string
+  constructor({
+    name,
+    password,
+  }: {
+    name: string
+    password: string
+  }) {
+    if (password.length < 6)
+      throw new Error(
+        'The password length must be at least 6 characters.'
+      )
+    this.name = name
+    this.password = password
+  }
+}
+
+test('creates a new user with 6-character password', () => {
+  expect(
+    new User({ name: 'hoge', password: '123456' })
+  ).toEqual({
+    name: 'hoge',
+    password: '123456',
+  })
+})
+
+test('throw Error when the length of password is less than 6', () => {
+  expect(
+    () => new User({ name: 'hoge', password: '12345' })
+  ).toThrow()
+
+  expect(
+    () => new User({ name: 'hoge', password: '12345' })
+  ).toThrowError()
+
+  expect(
+    () => new User({ name: 'hoge', password: '12345' })
+  ).toThrow(Error)
+
+  expect(
+    () => new User({ name: 'hoge', password: '12345' })
+  ).toThrow(
+    'The password length must be at least 6 characters.'
+  )
+
+  expect(
+    () => new User({ name: 'hoge', password: '12345' })
+  ).toThrowError(
+    'The password length must be at least 6 characters.'
+  )
+})
