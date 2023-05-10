@@ -107,3 +107,64 @@ test('difference between toEqual and toStrictEqual', () => {
     1,
   ])
 })
+
+// 真偽値の評価
+test('"0" should be Truthy', () => {
+  expect('0').toBeTruthy()
+})
+
+test('0 should be Falsy', () => {
+  expect(0).toBeFalsy()
+})
+
+// null, undefinedの評価
+test('should be null', () => {
+  expect(null).toBe(null)
+  expect(null).toBeNull()
+})
+
+test('should be undefined', () => {
+  expect(undefined).toBe(undefined)
+  expect(undefined).toBeUndefined()
+})
+
+test('should be null or undefined', () => {
+  let a // undefined
+  expect(a == null).toBe(true)
+  a = null // null
+  expect(a == null).toBe(true)
+})
+
+// 曖昧な結果の評価
+const hoge = () => ({ hoge: 'hogehoge', number: 0 })
+
+test('hoge return anything', () => {
+  // not null and not undefined
+  expect(hoge()).toEqual(expect.anything())
+
+  expect(hoge()).toEqual({
+    hoge: 'hogehoge',
+    number: expect.anything(),
+  })
+
+  expect(hoge()).toEqual({
+    hoge: expect.any(String),
+    number: expect.any(Number),
+  })
+})
+
+// 数値の評価
+test('0.1 + 0.2 returns 0.3', () => {
+  expect(0.1 + 0.2).not.toBe(0.3)
+  expect(0.1 + 0.2).toBeCloseTo(0.3)
+})
+
+// 数値の比較
+test('compare number', () => {
+  expect(0.1 + 0.2).toBeGreaterThan(0.3)
+  expect(0.1 + 0.2 > 0.3).toBe(true)
+
+  expect(0.1 + 0.2).toBeGreaterThanOrEqual(0.3)
+  expect(0.1 + 0.2).toBeLessThan(0.4)
+  expect(0.1 + 0.2).toBeLessThanOrEqual(0.4)
+})
