@@ -332,3 +332,61 @@ test('throw Error when the length of password is less than 6', () => {
     'The password length must be at least 6 characters.'
   )
 })
+
+// Callback関数の結果の評価
+const fetchDataWithCallback = (
+  callback: (message: string) => void
+) => {
+  // setTimeoutの引数: (callback: (args_0: string) => void, ms?: number | undefined, args_0: string)
+  setTimeout(callback, 3000, 'lemon')
+}
+
+test('return lemon', (done) => {
+  const callback = (message: string) => {
+    expect(message).toBe('lemon')
+    done()
+  }
+
+  fetchDataWithCallback(callback)
+})
+
+// Promise関数の結果の評価
+const fetchDataWithPromiseResolve = () => {
+  return new Promise((resolve) =>
+    setTimeout(resolve, 1000, 'lemon')
+  )
+}
+
+test('return lemon', () => {
+  return expect(
+    fetchDataWithPromiseResolve()
+  ).resolves.toBe('lemon')
+})
+
+test('return lemon with async/await', async () => {
+  await expect(
+    fetchDataWithPromiseResolve()
+  ).resolves.toBe('lemon')
+})
+
+const fetchDataWithPromiseReject = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(
+      reject,
+      1000,
+      new Error('lemon does not exist')
+    )
+  })
+}
+
+test('failed to return lemon', () => {
+  return expect(
+    fetchDataWithPromiseReject()
+  ).rejects.toThrow('lemon does not exist')
+})
+
+test('failed to return lemon with async/await', async () => {
+  await expect(
+    fetchDataWithPromiseReject
+  ).rejects.toThrowError('lemon does not exist')
+})
