@@ -27,7 +27,11 @@ describe.each([
     })
 
     test('a search keyword will be on the page title in google.com', async () => {
-      const page = await browser.newPage()
+      const page = await browser.newPage({
+        recordVideo: {
+          dir: 'videos',
+        },
+      })
       await page.goto('https://www.google.com/ncr')
       await page.type('textarea[name="q"]', 'playwright')
       await page.keyboard.press('Enter')
