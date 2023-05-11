@@ -15,7 +15,7 @@ export const Button = ({
   return (
     <button
       className={className}
-      onClick={(prev) => setIsToggleOn(!prev)}
+      onClick={() => setIsToggleOn((prev) => !prev)}
     >
       {isToggleOn ? 'ON' : 'OFF'}
     </button>

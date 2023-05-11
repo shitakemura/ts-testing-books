@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Button renders correctly with react-test-renderer 1`] = `
+exports[`UI snapshot test renders correctly with react-test-renderer 1`] = `
 <button
   className="primary"
   onClick={[Function]}
