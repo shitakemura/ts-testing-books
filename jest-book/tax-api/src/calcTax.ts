@@ -116,7 +116,7 @@ export const calcTaxWithheld = ({ incomeTaxBase }: CalcTaxWithheldInput) => {
   return Math.floor((incomeTaxBase * 1021) / 1000)
 }
 
-const calcSeverancePayTaxInputSchema = z
+export const calcSeverancePayTaxInputSchema = z
   .object({
     yearsOfService: z.number().int().gte(1).lte(100),
     isDisability: z.boolean(),
@@ -125,7 +125,7 @@ const calcSeverancePayTaxInputSchema = z
   })
   .strict()
 
-type CalcSeverancePayTaxInput = z.infer<typeof calcSeverancePayTaxInputSchema>
+export type CalcSeverancePayTaxInput = z.infer<typeof calcSeverancePayTaxInputSchema>
 
 const validatedInput = (input: CalcSeverancePayTaxInput) => {
   try {

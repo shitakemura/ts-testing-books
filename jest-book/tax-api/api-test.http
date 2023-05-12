@@ -7,3 +7,15 @@ Content-Type: application/json
     "isOfficer": false,
     "severancePay": 3000000
 }
+
+###
+# invalid request
+POST http://localhost:3000/calc-tax
+Content-Type: application/json
+
+{
+    "yearsOfService": 0,
+    "isDisability": false,
+    "isOfficer": false,
+    "severancePay": 3000000
+}
