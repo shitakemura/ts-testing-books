@@ -285,4 +285,53 @@ describe('退職金の所得税', () => {
       expect(tax).toBe(expected)
     },
   )
+
+  describe('入力値バリデーション', () => {
+    describe('勤続年数は1以上100以下の整数であること', () => {
+      test.each`
+        yearsOfService
+        ${-1}
+        ${0}
+        ${101}
+        ${null}
+        ${undefined}
+        ${'some string'}
+      `('勤続年数$yearsOfService年はエラー', ({ yearsOfService }) => {
+        expect(() =>
+          calcIncomeTaxForSeverancePay({
+            yearsOfService,
+            isDisability: false,
+            isOfficer: false,
+            severancePay: 100_000_000,
+          }),
+        ).toThrow('Invalid argument.')
+      })
+
+      test.each`
+        yearsOfService | expected
+        ${1}           | ${39991549}
+        ${100}         | ${4496484}
+      `('勤続年数$yearsOfService年は成功', ({ yearsOfService, expected }) => {
+        expect(
+          calcIncomeTaxForSeverancePay({
+            yearsOfService,
+            isDisability: false,
+            isOfficer: false,
+            severancePay: 100_000_000,
+          }),
+        ).toBe(expected)
+      })
+
+      test('勤続年数は未定義の場合はエラー', () => {
+        expect(
+          () =>
+            calcIncomeTaxForSeverancePay({
+              isDisability: false,
+              isOfficer: false,
+              severancePay: 100_000_000,
+            } as any), // eslint-disable-line @typescript-eslint/no-explicit-any
+        ).toThrow('Invalid argument.')
+      })
+    })
+  })
 })
