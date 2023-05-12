@@ -125,27 +125,22 @@ const calcSeverancePayTaxInputSchema = z
   })
   .strict()
 
-type CalcSeverancePayTaxInput = {
-  yearsOfService: number
-  isDisability: boolean
-  isOfficer: boolean
-  severancePay: number
+type CalcSeverancePayTaxInput = z.infer<typeof calcSeverancePayTaxInputSchema>
+
+const validatedInput = (input: CalcSeverancePayTaxInput) => {
+  try {
+    return calcSeverancePayTaxInputSchema.parse(input)
+  } catch (e) {
+    throw new Error('Invalid argument.', { cause: e })
+  }
 }
 
 // 退職金の所得税
 export const calcIncomeTaxForSeverancePay = (
   input: CalcSeverancePayTaxInput,
 ) => {
-  let validatedInput: CalcSeverancePayTaxInput
-
-  try {
-    validatedInput = calcSeverancePayTaxInputSchema.parse(input)
-  } catch (e) {
-    throw new Error('Invalid argument.', { cause: e })
-  }
-
   const { yearsOfService, isDisability, isOfficer, severancePay } =
-    validatedInput
+    validatedInput(input)
 
   const retirementIncomeDeduction = calcRetirementIncomeDeduction({
     yearsOfService,
