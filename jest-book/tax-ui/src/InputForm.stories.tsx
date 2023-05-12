@@ -1,9 +1,9 @@
-import { ComponentMeta, ComponentStoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react'
 
 import { InputForm } from './InputForm'
 
 export default {
   component: InputForm,
-} as ComponentMeta<typeof InputForm>
+} as Meta<typeof InputForm>
 
-export const Standard: ComponentStoryObj<typeof InputForm> = {}
+export const Standard: StoryObj<typeof InputForm> = {}
