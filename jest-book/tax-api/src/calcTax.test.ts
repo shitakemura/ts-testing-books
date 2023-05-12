@@ -293,9 +293,7 @@ describe('退職金の所得税', () => {
         ${-1}
         ${0}
         ${101}
-        ${null}
-        ${undefined}
-        ${'some string'}
+        ${10.5}
       `('勤続年数$yearsOfService年はエラー', ({ yearsOfService }) => {
         expect(() =>
           calcIncomeTaxForSeverancePay({
@@ -322,15 +320,137 @@ describe('退職金の所得税', () => {
         ).toBe(expected)
       })
 
-      test('勤続年数は未定義の場合はエラー', () => {
-        expect(
-          () =>
+      describe('退職金は0以上1兆以下の整数であること', () => {
+        test.each`
+          severancePay
+          ${-1}
+          ${1_000_000_000_001}
+          ${8_000_000.1}
+        `('退職金$severancePay円はエラー', ({ severancePay }) => {
+          expect(() =>
             calcIncomeTaxForSeverancePay({
+              yearsOfService: 10,
+              isDisability: false,
+              isOfficer: false,
+              severancePay,
+            }),
+          ).toThrow('Invalid argument.')
+        })
+
+        test.each`
+          severancePay         | expected
+          ${0}                 | ${0}
+          ${1_000_000_000_000} | ${229705400884}
+        `('退職金$severancePay円は成功', ({ severancePay, expected }) => {
+          expect(
+            calcIncomeTaxForSeverancePay({
+              yearsOfService: 100,
+              isDisability: false,
+              isOfficer: false,
+              severancePay,
+            }),
+          ).toBe(expected)
+        })
+      })
+
+      describe('不正な値の場合', () => {
+        test.each`
+          yearsOfService
+          ${null}
+          ${undefined}
+          ${'some string'}
+        `('勤続年数:$yearsOfServiceはエラー', ({ yearsOfService }) => {
+          expect(() =>
+            calcIncomeTaxForSeverancePay({
+              yearsOfService,
               isDisability: false,
               isOfficer: false,
               severancePay: 100_000_000,
-            } as any), // eslint-disable-line @typescript-eslint/no-explicit-any
-        ).toThrow('Invalid argument.')
+            }),
+          ).toThrow('Invalid argument.')
+        })
+      })
+
+      describe('プロパティが未定義の場合', () => {
+        test('勤続年数が未定義の場合はエラー', () => {
+          expect(
+            () =>
+              calcIncomeTaxForSeverancePay({
+                isDisability: false,
+                isOfficer: false,
+                severancePay: 100_000_000,
+              } as any), // eslint-disable-line @typescript-eslint/no-explicit-any
+          ).toThrow('Invalid argument.')
+        })
+
+        test('障害者となったことに直接基因して退職したかが未定義の場合はエラー', () => {
+          expect(
+            () =>
+              calcIncomeTaxForSeverancePay({
+                yearsOfService: 10,
+                isOfficer: false,
+                severancePay: 100_000_000,
+              } as any), // eslint-disable-line
+          ).toThrow('Invalid argument.')
+        })
+
+        test('役員等かどうかが未定義の場合はエラー', () => {
+          expect(
+            () =>
+              calcIncomeTaxForSeverancePay({
+                yearsOfService: 10,
+                isDisability: false,
+                severancePay: 100_000_000,
+              } as any), // eslint-disable-line
+          ).toThrow('Invalid argument.')
+        })
+
+        test('退職金が未定義の場合はエラー', () => {
+          expect(
+            () =>
+              calcIncomeTaxForSeverancePay({
+                yearsOfService: 10,
+                isDisability: false,
+                isOfficer: false,
+              } as any), // eslint-disable-line
+          ).toThrow('Invalid argument.')
+        })
+      })
+
+      describe('不正なオブジェクトの場合', () => {
+        test('意図していないプロパティが含まれている場合はエラー', () => {
+          expect(
+            () =>
+              calcIncomeTaxForSeverancePay({
+                yearsOfService: 10,
+                isDisability: false,
+                isOfficer: false,
+                severancePay: 100_000_000,
+                unknownProperty: 'something',
+              } as any), // eslint-disable-line
+          ).toThrow('Invalid argument.')
+        })
+
+        test('空オブジェクトの場合はエラー', () => {
+          // eslint-disable-next-line
+          expect(() => calcIncomeTaxForSeverancePay({} as any)).toThrow(
+            'Invalid argument.',
+          )
+        })
+
+        test('undefinedの場合はエラー', () => {
+          // eslint-disable-next-line
+          expect(() => calcIncomeTaxForSeverancePay(undefined as any)).toThrow(
+            'Invalid argument.',
+          )
+        })
+
+        test('nullの場合はエラー', () => {
+          // eslint-disable-next-line
+          expect(() => calcIncomeTaxForSeverancePay(null as any)).toThrow(
+            'Invalid argument.',
+          )
+        })
       })
     })
   })
