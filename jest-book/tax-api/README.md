@@ -15,5 +15,6 @@
   - 課税退職所得金額の計算: calcTaxableRetirementIncome
   - 基準所得税額の計算: calcIncomeTaxBase
   - 所得税の源泉徴収税額の計算: calcTaxWithheld
+  - 退職金の所得税計算関数: calcIncomeTaxForSeverancePay
 
 - 退職金の所得税計算 API ハンドラを実装
