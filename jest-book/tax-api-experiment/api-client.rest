@@ -1,0 +1,18 @@
+GET http://localhost:3000/
+
+###
+POST http://localhost:3000/check-post
+
+###
+POST http://localhost:3000/check-status-code
+
+###
+POST http://localhost:3000/check-body
+Content-Type: application/json
+
+{
+    "yearsOfService": 5,
+    "isDiasbility": false,
+    "isOfficer": false,
+    "severancePay": 1000000
+}
