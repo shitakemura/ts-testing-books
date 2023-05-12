@@ -1,0 +1,9 @@
+POST http://localhost:3000/calc-tax
+Content-Type: application/json
+
+{
+    "yearsOfService": 6,
+    "isDisability": false,
+    "isOfficer": false,
+    "severancePay": 3000000
+}
