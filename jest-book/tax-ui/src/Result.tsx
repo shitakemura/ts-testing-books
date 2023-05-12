@@ -3,13 +3,14 @@ import {
   Card,
   CardBody,
   CardHeader,
+  CardProps,
   Center,
   Heading,
   Text,
   VStack,
 } from '@chakra-ui/react'
 
-type ResultProps = {
+type ResultProps = CardProps & {
   tax: number | null
 }
 
