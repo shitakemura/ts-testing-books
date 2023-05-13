@@ -19,3 +19,7 @@ Content-Type: application/json
     "isOfficer": false,
     "severancePay": 3000000
 }
+
+###
+# Preflight request for CORS
+OPTIONS http://localhost:3000/calc-tax
