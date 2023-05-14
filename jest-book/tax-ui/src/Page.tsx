@@ -32,14 +32,15 @@ export const Page = () => {
   const { mutate } = useCalcTax()
 
   const handleInputFormSubmit = (formInputs: FormInputs) => {
-    const param: CalcTaxParam = {
-      yearsOfService: Number(formInputs.yearsOfService),
-      isDisability: formInputs.isDisability,
-      isOfficer: Number(formInputs.isOfficer) === 1 ? true : false,
-      severancePay: Number(formInputs.severancePay),
-    }
+    // zodのschemaの記載通りに、InputFormの入力値をparamの型に変換するので、以下の変換は不要となった
+    // const param: CalcTaxParam = {
+    //   yearsOfService: Number(formInputs.yearsOfService),
+    //   isDisability: formInputs.isDisability,
+    //   isOfficer: Number(formInputs.isOfficer) === 1 ? true : false,
+    //   severancePay: Number(formInputs.severancePay),
+    // }
 
-    mutate(param, {
+    mutate(formInputs, {
       onSuccess: async (data) => {
         if (data.ok) {
           const json = (await data.json()) as CalcTaxResult

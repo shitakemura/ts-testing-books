@@ -1,5 +1,8 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+
 import {
   Button,
   Card,
@@ -9,6 +12,7 @@ import {
   Center,
   Checkbox,
   FormControl,
+  FormErrorMessage,
   FormHelperText,
   FormLabel,
   Heading,
@@ -23,19 +27,32 @@ import {
   VStack,
 } from '@chakra-ui/react'
 
-export type FormInputs = {
-  yearsOfService: string
-  isDisability: boolean
-  isOfficer: string
-  severancePay: string
-}
+const schema = z
+  .object({
+    yearsOfService: z.number().int().gte(1).lte(100),
+    isDisability: z.boolean(),
+    isOfficer: z
+      .string()
+      .transform((val) => (Number(val) === 1 ? true : false)),
+    severancePay: z.number().int().gte(0).lte(1_000_000_000_000),
+  })
+  .strict()
+
+export type FormInputs = z.infer<typeof schema>
 
 type InputFormProps = CardProps & {
   onInputFormSubmit: SubmitHandler<FormInputs>
 }
 
 export const InputForm = ({ onInputFormSubmit, ...props }: InputFormProps) => {
-  const { register, handleSubmit } = useForm<FormInputs>()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }, // バリデーションエラーの情報
+  } = useForm<FormInputs>({
+    resolver: zodResolver(schema), // zodでバリデーションを実行する
+    mode: 'onChange', // 入力中にバリデーションを実行
+  })
 
   return (
     <Card w="400px" {...props}>
@@ -47,21 +64,31 @@ export const InputForm = ({ onInputFormSubmit, ...props }: InputFormProps) => {
         </Center>
       </CardHeader>
       <CardBody>
-        <form onSubmit={handleSubmit(onInputFormSubmit)}>
+        <form
+          onSubmit={handleSubmit(onInputFormSubmit)}
+          noValidate // RHFでバリデーションんを実行するため、デフォルトのバリデーションをオフにする
+        >
           <VStack spacing={5}>
-            <FormControl>
+            <FormControl
+              isInvalid={errors.yearsOfService !== undefined} // isInvalid = trueの場合、エラー表示(Chakra UIのプロパティ)
+            >
               <FormLabel fontWeight="bold">勤続年数</FormLabel>
               <HStack>
                 <InputGroup w="120px">
                   <Input
                     type="number"
                     defaultValue="10"
-                    {...register('yearsOfService')}
+                    // stringの入力値をnumberとしてzodに渡す
+                    {...register('yearsOfService', { valueAsNumber: true })}
                   />
                   <InputRightAddon>年</InputRightAddon>
                 </InputGroup>
                 <FormHelperText>1年未満の端数は切り上げ</FormHelperText>
               </HStack>
+              {/* FromControlのisInvalidがtrueの場合に表示される */}
+              <FormErrorMessage>
+                有効な勤続年数を表示してください
+              </FormErrorMessage>
               <Spacer />
             </FormControl>
             <FormControl>
@@ -83,16 +110,19 @@ export const InputForm = ({ onInputFormSubmit, ...props }: InputFormProps) => {
                 </Stack>
               </RadioGroup>
             </FormControl>
-            <FormControl>
+            <FormControl isInvalid={errors.severancePay !== undefined}>
               <FormLabel fontWeight="bold">退職金</FormLabel>
               <InputGroup w="200px">
                 <Input
                   type="number"
                   defaultValue="5000000"
-                  {...register('severancePay')}
+                  {...register('severancePay', { valueAsNumber: true })}
                 />
                 <InputRightAddon>円</InputRightAddon>
               </InputGroup>
+              <FormErrorMessage>
+                有効な退職金を入力してください
+              </FormErrorMessage>
             </FormControl>
 
             <Button colorScheme="blue" alignSelf="flex-end" type="submit">
