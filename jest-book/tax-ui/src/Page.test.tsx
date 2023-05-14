@@ -56,28 +56,35 @@ describe('ページコンポーネント', () => {
     })
   })
 
-  test('勤続年数を入力できる', async () => {
-    const pendingRequest = waitForCalcTaxRequest()
+  describe('勤続年数を入力できる', () => {
+    test.each`
+      yearsOfServiceValue
+      ${'1'}
+      ${'20'}
+      ${'100'}
+    `('勤続年数$yearsOfServiceValue', async ({ yearsOfServiceValue }) => {
+      const pendingRequest = waitForCalcTaxRequest()
 
-    const user = userEvent.setup()
-    render(<Page />)
+      const user = userEvent.setup()
+      render(<Page />)
 
-    const yearsOfService = screen.getByLabelText('勤続年数')
-    await user.clear(yearsOfService)
-    await user.type(yearsOfService, '20')
+      const yearsOfServiceTextBox = screen.getByLabelText('勤続年数')
+      await user.clear(yearsOfServiceTextBox)
+      await user.type(yearsOfServiceTextBox, yearsOfServiceValue)
 
-    await user.click(screen.getByText('所得税を計算する'))
+      await user.click(screen.getByText('所得税を計算する'))
 
-    await waitFor(() => {
-      expect(screen.getByLabelText('tax').textContent).toBe('10,000円')
-    })
+      await waitFor(() => {
+        expect(screen.getByLabelText('tax').textContent).toBe('10,000円')
+      })
 
-    const request = await pendingRequest
-    expect(await request.json()).toStrictEqual({
-      yearsOfService: 20,
-      isDisability: false,
-      isOfficer: false,
-      severancePay: 5_000_000,
+      const request = await pendingRequest
+      expect(await request.json()).toStrictEqual({
+        yearsOfService: Number(yearsOfServiceValue),
+        isDisability: false,
+        isOfficer: false,
+        severancePay: 5_000_000,
+      })
     })
   })
 
@@ -173,28 +180,36 @@ describe('ページコンポーネント', () => {
     })
   })
 
-  test('退職金を入力できる', async () => {
-    const pendingRequest = waitForCalcTaxRequest()
+  describe('退職金を入力できる', () => {
+    test.each`
+      severancePayValue
+      ${'0'}
+      ${'1'}
+      ${'10000000'}
+      ${'1000000000000'}
+    `('退職金$severancePayValue', async ({ severancePayValue }) => {
+      const pendingRequest = waitForCalcTaxRequest()
 
-    const user = userEvent.setup()
-    render(<Page />)
+      const user = userEvent.setup()
+      render(<Page />)
 
-    const payTextBox = screen.getByLabelText('退職金')
-    await user.clear(payTextBox)
-    await user.type(payTextBox, '10000000')
+      const payTextBox = screen.getByLabelText('退職金')
+      await user.clear(payTextBox)
+      await user.type(payTextBox, severancePayValue)
 
-    await user.click(screen.getByText('所得税を計算する'))
+      await user.click(screen.getByText('所得税を計算する'))
 
-    await waitFor(() => {
-      expect(screen.getByLabelText('tax').textContent).toBe('10,000円')
-    })
+      await waitFor(() => {
+        expect(screen.getByLabelText('tax').textContent).toBe('10,000円')
+      })
 
-    const request = await pendingRequest
-    expect(await request.json()).toStrictEqual({
-      yearsOfService: 10,
-      isDisability: false,
-      isOfficer: false,
-      severancePay: 10000000,
+      const request = await pendingRequest
+      expect(await request.json()).toStrictEqual({
+        yearsOfService: 10,
+        isDisability: false,
+        isOfficer: false,
+        severancePay: Number(severancePayValue),
+      })
     })
   })
 })
