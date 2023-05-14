@@ -87,7 +87,7 @@ export const InputForm = ({ onInputFormSubmit, ...props }: InputFormProps) => {
               </HStack>
               {/* FromControlのisInvalidがtrueの場合に表示される */}
               <FormErrorMessage>
-                有効な勤続年数を表示してください
+                有効な勤続年数を入力してください
               </FormErrorMessage>
               <Spacer />
             </FormControl>
