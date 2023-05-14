@@ -7,12 +7,20 @@ export default {
   component: Presentation,
 } as Meta<typeof Presentation>
 
-export const Standard: StoryObj<typeof Presentation> = {
-  args: { tax: 10000 },
+export const BeforeCalculation: StoryObj<typeof Presentation> = {
+  args: { tax: 10000, calcStatus: 'before-calculation' },
 }
 
-export const NoResult: StoryObj<typeof Presentation> = {
-  args: { tax: null },
+export const UnderCalculation: StoryObj<typeof Presentation> = {
+  args: { tax: 10000, calcStatus: 'under-calculation' },
+}
+
+export const Succeeded: StoryObj<typeof Presentation> = {
+  args: { tax: 10000, calcStatus: 'succeeded' },
+}
+
+export const Failed: StoryObj<typeof Presentation> = {
+  args: { tax: 10000, calcStatus: 'failed' },
 }
 
 export const ValidationError: StoryObj<typeof Presentation> = {
