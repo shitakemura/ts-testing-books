@@ -35,7 +35,7 @@ export const Page = () => {
     const param: CalcTaxParam = {
       yearsOfService: Number(formInputs.yearsOfService),
       isDisability: formInputs.isDisability,
-      isOfficer: Boolean(formInputs.isOfficer),
+      isOfficer: Number(formInputs.isOfficer) === 1 ? true : false,
       severancePay: Number(formInputs.severancePay),
     }
 
