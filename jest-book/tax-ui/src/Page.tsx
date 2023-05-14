@@ -9,7 +9,7 @@ import { Result } from './Result'
 import { CalcTaxParam, CalcTaxResult, useCalcTax } from './useCalcTax'
 
 type PresentationProps = {
-  tax: number | null
+  tax: number
   onInputFormSubmit: SubmitHandler<FormInputs>
   calcStatus: CalcStatus
 }
@@ -39,7 +39,7 @@ export const Presentation = ({
 
 export const Page = () => {
   const [calcStatus, setCalcStatus] = useState<CalcStatus>('before-calculation')
-  const [tax, setTax] = useState<number | null>(null)
+  const [tax, setTax] = useState(0)
 
   const { mutate } = useCalcTax()
 
@@ -61,12 +61,12 @@ export const Page = () => {
           setTax(json.tax)
         } else {
           setCalcStatus('failed')
-          setTax(null)
+          setTax(0)
         }
       },
       onError: () => {
         setCalcStatus('failed')
-        setTax(null)
+        setTax(0)
       },
     })
   }

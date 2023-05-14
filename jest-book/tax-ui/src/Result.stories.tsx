@@ -7,9 +7,9 @@ export default {
 } as Meta<typeof Result>
 
 export const Standard: StoryObj<typeof Result> = {
-  args: { tax: 10000 },
+  args: { tax: 10000, calcStatus: 'succeeded' },
 }
 
 export const NoResult: StoryObj<typeof Result> = {
-  args: { tax: null },
+  args: { tax: 0, calcStatus: 'before-calculation' },
 }
