@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { SubmitHandler } from 'react-hook-form'
 
 import { Heading, HStack, Spacer, VStack } from '@chakra-ui/react'
@@ -6,7 +5,7 @@ import { Heading, HStack, Spacer, VStack } from '@chakra-ui/react'
 import { CalcStatus } from './calcStatus'
 import { FormInputs, InputForm } from './InputForm'
 import { Result } from './Result'
-import { CalcTaxParam, CalcTaxResult, useCalcTax } from './useCalcTax'
+import { useCalcTax } from './useCalcTax'
 
 type PresentationProps = {
   tax: number
@@ -38,37 +37,10 @@ export const Presentation = ({
 }
 
 export const Page = () => {
-  const [calcStatus, setCalcStatus] = useState<CalcStatus>('before-calculation')
-  const [tax, setTax] = useState(0)
-
-  const { mutate } = useCalcTax()
+  const { mutate, tax, calcStatus } = useCalcTax()
 
   const handleInputFormSubmit = (formInputs: FormInputs) => {
-    // zodのschemaの記載通りに、InputFormの入力値をparamの型に変換するので、以下の変換は不要となった
-    // const param: CalcTaxParam = {
-    //   yearsOfService: Number(formInputs.yearsOfService),
-    //   isDisability: formInputs.isDisability,
-    //   isOfficer: Number(formInputs.isOfficer) === 1 ? true : false,
-    //   severancePay: Number(formInputs.severancePay),
-    // }
-
-    setCalcStatus('under-calculation')
-    mutate(formInputs, {
-      onSuccess: async (data) => {
-        if (data.ok) {
-          const json = (await data.json()) as CalcTaxResult
-          setCalcStatus('succeeded')
-          setTax(json.tax)
-        } else {
-          setCalcStatus('failed')
-          setTax(0)
-        }
-      },
-      onError: () => {
-        setCalcStatus('failed')
-        setTax(0)
-      },
-    })
+    mutate(formInputs)
   }
 
   return (
