@@ -1,5 +1,5 @@
 // フィクスチャー(fixture): レスポンスを再現するテスト用のデータ
-import { Articles, HttpError } from "./type";
+import { Article, Articles, HttpError } from "./type";
 
 export const httpError: HttpError = {
   err: { message: "internal server error" },
@@ -29,4 +29,12 @@ export const getMyArticleData: Articles = {
       body: "Jestは単体テストとして、UIコンポーネントのテストが可能です…",
     },
   ],
+};
+
+export const postMyArticleData: Article = {
+  id: "xxxxxxx-123456",
+  createdAt: "2022-07-19T22:38:41.005Z",
+  tags: ["testing", "react"],
+  title: "Jest ではじめるReact のコンポーネントテスト",
+  body: "Jestは単体テストとして、UIコンポーネントのテストが可能です。",
 };
