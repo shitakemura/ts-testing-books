@@ -14,3 +14,5 @@
 
 - モックモジュール: jest.mock
 - モック関数: jest.fn, jest.spyOn
+
+- フィクスチャー(fixture): レスポンスを再現するテスト用のデータ
