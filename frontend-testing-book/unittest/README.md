@@ -24,3 +24,6 @@
 - npx tsc --init
 - npm install -D jest ts-jest @types/jest
 - npx ts-jest config:init
+
+- npm install react react-dom
+- npm install -D jest-environment-jsdom @testing-library/react @testing-library/jest-dom @testing-library/user-event

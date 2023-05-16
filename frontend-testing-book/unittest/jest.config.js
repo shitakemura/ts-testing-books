@@ -1,5 +1,6 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: "ts-jest",
-  testEnvironment: "node",
+  // Jest実行環境のNode.jsにはDOM APIが標準で用意されていないのでjsdomを使用する
+  testEnvironment: "jest-environment-jsdom",
 };
