@@ -21,8 +21,10 @@ export const DeliveryAddress = ({ title = "お届け先" }: { title?: string }) 
         </label>
       </p>
       <p>
-        番地番号
-        <input type="text" name="streetNumber" placeholder="00-00" />
+        <label>
+          番地番号
+          <input type="text" name="streetNumber" placeholder="00-00" />
+        </label>
       </p>
     </fieldset>
   );
