@@ -2,6 +2,7 @@
     "editor.formatOnType": true,
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
+    "editor.acceptSuggestionOnEnter": "on",
     "[typescript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
