@@ -26,6 +26,8 @@
   - 07: 非同期処理を含む UI コンポーネントテスト
   - 08: UI コンポーネントの Snapshot テスト
     - npx jest --updateSnapshot
+  - 09: 暗黙のロールとアクセシブルネーム
+    - logRoles 関数を使って出力できる
 
 #### setup
 
